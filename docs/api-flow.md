@@ -155,14 +155,3 @@ Import these files:
 
 Then choose `Local` environment and run collection in order.
 
-## 7) Run Everything Automatically
-
-### Standard test suite
-```bash
-./scripts/test.sh
-```
-
-### Complete suite (all optional checks)
-```bash
-./scripts/test.sh --full-suite
-```

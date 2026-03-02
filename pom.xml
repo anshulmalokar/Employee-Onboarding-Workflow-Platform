@@ -22,6 +22,8 @@
     <properties>
         <java.version>17</java.version>
         <spring-boot.version>3.2.6</spring-boot.version>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <maven.compiler.parameters>true</maven.compiler.parameters>
     </properties>
 
     <dependencyManagement>
@@ -57,7 +59,7 @@
                     <version>3.11.0</version>
                     <configuration>
                         <release>${java.version}</release>
-                        <parameters>true</parameters>
+                        <parameters>${maven.compiler.parameters}</parameters>
                     </configuration>
                 </plugin>
             </plugins>

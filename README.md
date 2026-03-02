@@ -72,29 +72,6 @@ DLQ topics are auto-derived with `.dlq` suffix.
 mvn clean verify
 ```
 
-### Run full local verification script
-
-```bash
-./scripts/test.sh
-```
-
-Optional flags:
-
-- `--skip-build`
-- `--keep-up`
-- `--include-dlq`
-- `--include-timeout`
-- `--include-concurrency`
-- `--full-suite`
-
-The script validates:
-- readiness/health for all services
-- happy path and failure/compensation flow
-- idempotency (`X-Idempotency-Key`)
-- correlation-id propagation
-- default workflow resolution
-- API error handling (`400`/`404`)
-
 ### Run microservices on host + infra in Docker
 
 ```bash
