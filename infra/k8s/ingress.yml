@@ -1,0 +1,18 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: onboarding-ingress
+  namespace: onboarding-workflow
+spec:
+  ingressClassName: nginx
+  rules:
+    - host: onboarding.local
+      http:
+        paths:
+          - path: /api/onboarding
+            pathType: Prefix
+            backend:
+              service:
+                name: onboarding-service
+                port:
+                  number: 80

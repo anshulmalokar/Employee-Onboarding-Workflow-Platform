@@ -1,0 +1,9 @@
+com/onboarding/contracts/events/SagaResultEvent.class
+com/onboarding/contracts/constants/KafkaTopics.class
+com/onboarding/contracts/idempotency/InMemoryIdempotencyGuard.class
+com/onboarding/contracts/enums/StepType.class
+com/onboarding/contracts/enums/EventType.class
+com/onboarding/contracts/events/OnboardingRequestedEvent.class
+com/onboarding/contracts/events/WorkflowCommand.class
+com/onboarding/contracts/enums/CommandType.class
+com/onboarding/contracts/events/WorkflowEvent.class

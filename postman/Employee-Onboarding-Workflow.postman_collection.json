@@ -1,0 +1,238 @@
+{
+  "info": {
+    "name": "Employee Onboarding Workflow",
+    "description": "End-to-end collection for onboarding workflow, saga flow, and admin APIs.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_postman_id": "8f645f7b-6dad-47c0-8b66-e8f6a04f7c44"
+  },
+  "item": [
+    {
+      "name": "01 - Health - Onboarding Service",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/actuator/health",
+          "host": ["{{baseUrl}}"],
+          "path": ["actuator", "health"]
+        }
+      }
+    },
+    {
+      "name": "02 - Create Onboarding (Happy)",
+      "event": [
+        {
+          "listen": "prerequest",
+          "script": {
+            "exec": [
+              "pm.environment.set('correlationId', 'corr-' + Date.now());",
+              "pm.environment.set('idempotencyKey', 'idem-happy-' + Date.now());"
+            ],
+            "type": "text/javascript"
+          }
+        },
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('Status code is 202', function () { pm.response.to.have.status(202); });",
+              "var json = pm.response.json();",
+              "pm.environment.set('sagaId', json.sagaId);",
+              "pm.test('sagaId captured', function () { pm.expect(json.sagaId).to.not.be.empty; });"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {"key": "Content-Type", "value": "application/json"},
+          {"key": "X-Correlation-Id", "value": "{{correlationId}}"},
+          {"key": "X-Idempotency-Key", "value": "{{idempotencyKey}}"}
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"employeeId\": \"emp-1001\",\n  \"employeeEmail\": \"emp-1001@company.com\",\n  \"department\": \"engineering\",\n  \"workflowName\": \"onboarding\"\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/onboarding",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "onboarding"]
+        }
+      }
+    },
+    {
+      "name": "03 - Get Onboarding by sagaId",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('Status code is 200', function () { pm.response.to.have.status(200); });"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/api/onboarding/{{sagaId}}",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "onboarding", "{{sagaId}}"]
+        }
+      }
+    },
+    {
+      "name": "04 - Create Onboarding (Device Failure)",
+      "event": [
+        {
+          "listen": "prerequest",
+          "script": {
+            "exec": [
+              "pm.environment.set('correlationId', 'corr-fail-' + Date.now());",
+              "pm.environment.set('idempotencyKey', 'idem-fail-' + Date.now());"
+            ],
+            "type": "text/javascript"
+          }
+        },
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('Status code is 202', function () { pm.response.to.have.status(202); });",
+              "var json = pm.response.json();",
+              "pm.environment.set('failedSagaId', json.sagaId);"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {"key": "Content-Type", "value": "application/json"},
+          {"key": "X-Correlation-Id", "value": "{{correlationId}}"},
+          {"key": "X-Idempotency-Key", "value": "{{idempotencyKey}}"}
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"employeeId\": \"fail-device-1002\",\n  \"employeeEmail\": \"emp-1002@company.com\",\n  \"department\": \"engineering\",\n  \"workflowName\": \"onboarding\"\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/onboarding",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "onboarding"]
+        }
+      }
+    },
+    {
+      "name": "05 - Get Failed Onboarding",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/api/onboarding/{{failedSagaId}}",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "onboarding", "{{failedSagaId}}"]
+        }
+      }
+    },
+    {
+      "name": "06 - Create Onboarding (Default Workflow)",
+      "event": [
+        {
+          "listen": "prerequest",
+          "script": {
+            "exec": [
+              "pm.environment.set('correlationId', 'corr-default-' + Date.now());",
+              "pm.environment.set('idempotencyKey', 'idem-default-' + Date.now());"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {"key": "Content-Type", "value": "application/json"},
+          {"key": "X-Correlation-Id", "value": "{{correlationId}}"},
+          {"key": "X-Idempotency-Key", "value": "{{idempotencyKey}}"}
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"employeeId\": \"emp-4001\",\n  \"employeeEmail\": \"emp-4001@company.com\",\n  \"department\": \"ops\"\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/onboarding",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "onboarding"]
+        }
+      }
+    },
+    {
+      "name": "07 - Not Found Check",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/api/onboarding/does-not-exist",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "onboarding", "does-not-exist"]
+        }
+      }
+    },
+    {
+      "name": "08 - Validation Error Check",
+      "request": {
+        "method": "POST",
+        "header": [
+          {"key": "Content-Type", "value": "application/json"}
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"employeeId\": \"\",\n  \"employeeEmail\": \"invalid\",\n  \"department\": \"\"\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/onboarding",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "onboarding"]
+        }
+      }
+    },
+    {
+      "name": "09 - DLQ List",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{orchestratorUrl}}/api/admin/dlq",
+          "host": ["{{orchestratorUrl}}"],
+          "path": ["api", "admin", "dlq"]
+        }
+      }
+    },
+    {
+      "name": "10 - DLQ Replay All",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "url": {
+          "raw": "{{orchestratorUrl}}/api/admin/dlq/replay-all",
+          "host": ["{{orchestratorUrl}}"],
+          "path": ["api", "admin", "dlq", "replay-all"]
+        }
+      }
+    }
+  ],
+  "variable": [
+    {"key": "baseUrl", "value": "http://localhost:8081"},
+    {"key": "orchestratorUrl", "value": "http://localhost:8082"},
+    {"key": "sagaId", "value": ""},
+    {"key": "failedSagaId", "value": ""},
+    {"key": "correlationId", "value": ""},
+    {"key": "idempotencyKey", "value": ""}
+  ]
+}

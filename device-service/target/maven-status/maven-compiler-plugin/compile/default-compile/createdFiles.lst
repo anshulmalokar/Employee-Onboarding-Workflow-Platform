@@ -1,0 +1,7 @@
+com/onboarding/device/messaging/DlqConsumer.class
+com/onboarding/device/DeviceServiceApplication.class
+com/onboarding/device/messaging/WorkflowEventProducer.class
+com/onboarding/device/service/DeviceAllocationService.class
+com/onboarding/device/messaging/WorkflowCommandConsumer.class
+com/onboarding/device/config/AsyncConfig.class
+com/onboarding/device/config/KafkaReliabilityConfig.class
